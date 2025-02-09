@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generative AI Club</title>
+  <!-- Font Awesome CDN -->
+  <script src="https://kit.fontawesome.com/c5b2d19410.js" crossorigin="anonymous"></script>
+  <style>
+    /*-----------------------------------------
+      CSS Variables & Global Styles
+    ------------------------------------------*/
+    :root {
+      /* Color Palette */
+      --primary-bg: #0a192f;
+      --secondary-bg: #020c1b;
+      --accent: #64ffda;
+      --text: #ffffff;
+      /* Radial Gradient Colors */
+      --gradient-center: rgba(100, 255, 218, 0.8);
+      --gradient-alt: rgba(25, 231, 183, 0.3);
+      --gradient-edge: rgba(100, 255, 218, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      /* Ensure the body takes up the full viewport height */
+    }
+
+    /* Main Content */
+    .content {
+      flex: 1;
+      /* Allow the main content to grow and push the footer down */
+    }
+
+    /*-----------------------------------------
+      Navbar Styles
+    ------------------------------------------*/
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--secondary-bg);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    .navbar .menu-icon {
+      display: none;
+      /* Hidden by default */
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      width: 30px;
+      height: 20px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .navbar .menu-icon div {
+      width: 100%;
+      height: 3px;
+      background-color: var(--accent);
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .navbar .menu-icon.open div:nth-child(1) {
+      transform: rotate(45deg) translateY(8px);
+    }
+
+    .navbar .menu-icon.open div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .navbar .menu-icon.open div:nth-child(3) {
+      transform: rotate(-45deg) translateY(-8px);
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+    }
+
+    .navbar ul li {
+      position: relative;
+      margin-left: 2rem;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      position: relative;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .navbar ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease-in-out;
+    }
+
+    .navbar ul li a:hover {
+      color: var(--accent);
+    }
+
+    .navbar ul li a:hover::after {
+      width: 100%;
+    }
+
+    /*-----------------------------------------
+      Hero Section with Dynamic Radial Gradient
+    ------------------------------------------*/
+    .hero-section {
+      text-align: center;
+      padding: 5rem 1rem;
+      position: relative;
+      overflow: hidden;
+      color: var(--text);
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center,
+          var(--gradient-center) 0%,
+          var(--gradient-alt) 50%,
+          var(--gradient-edge) 100%);
+      filter: blur(100px);
+      animation: gradientShift 15s infinite linear;
+      z-index: -1;
+    }
+
+    .hero-section h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .hero-section p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      animation: slideUp 2s ease-in-out;
+    }
+
+    .hero-section button {
+      background-color: var(--accent);
+      color: var(--primary-bg);
+      border: none;
+      padding: 0.8rem 2rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .hero-section button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--accent);
+    }
+
+    /*-----------------------------------------
+      Why Choose Us Section
+    ------------------------------------------*/
+    .why-choose-us {
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+
+    .why-choose-us h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background-color: var(--secondary-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .card i {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--accent);
+    }
+
+    .card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card p {
+      font-size: 0.9rem;
+    }
+
+    /*-----------------------------------------
+      Footer Styles
+    ------------------------------------------*/
+    footer {
+      background-color: var(--secondary-bg);
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: auto;
+      /* Push the footer to the bottom */
+    }
+
+    footer .social-links {
+      margin-bottom: 1rem;
+    }
+
+    footer .social-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      margin: 0 0.5rem;
+      border-radius: 10%;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    footer .social-links a:hover {
+      transform: scale(1.2) translateY(-5px);
+      box-shadow: 0 0 15px var(--accent);
+    }
+
+    /*-----------------------------------------
+      Responsive Navbar
+    ------------------------------------------*/
+    @media (max-width: 768px) {
+      .navbar ul {
+        display: none;
+        flex-direction: column;
+        background-color: var(--secondary-bg);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 1rem 0;
+      }
+
+      .navbar ul.active {
+        display: flex;
+      }
+
+      .navbar ul li {
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+
+      .navbar ul li a::after {
+        display: none;
+        /* Disable underline animation on small screens */
+      }
+
+      .navbar .menu-icon {
+        display: flex;
+      }
+    }
+
+    /*-----------------------------------------
+      Animations
+    ------------------------------------------*/
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        transform: translateX(-50%);
+      }
+
+      50% {
+        transform: translateX(50%);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">GenAI Club</div>
+    <div class="menu-icon" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <ul id="menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="innovations.html">Innovations</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="tools.html">Tools</a></li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <section class="hero-section" id="home">
+      <h1>Welcome to the Generative AI Club</h1>
+      <p>Empowering creativity and innovation through artificial intelligence.</p>
+      <button>Join Us</button>
+    </section>
+
+    <section class="why-choose-us">
+      <h2>Why Choose Us?</h2>
+      <div class="cards-container">
+        <div class="card">
+          <i class="fas fa-rocket"></i>
+          <h3>Innovative Projects</h3>
+          <p>Work on cutting-edge AI projects that push boundaries.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-chalkboard-teacher"></i>
+          <h3>Expert Guidance</h3>
+          <p>Learn from industry experts and mentors in the field of AI.</p>
+        </div>
+        <div class="card">
+          <i class="fas fa-users"></i>
+          <h3>Collaborative Community</h3>
+          <p>Be part of a vibrant community of like-minded individuals.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="social-links">
+      <a href="#" target="_blank"><i class="fab fa-x-twitter"></i></a> <!-- Twitter -->
+      <a href="#" target="_blank"><i class="fab fa-instagram"></i></a> <!-- Instagram -->
+      <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a> <!-- LinkedIn -->
+    </div>
+    <p>&copy; 2025 Generative AI Club. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      const icon = document.querySelector('.menu-icon');
+      menu.classList.toggle('active');
+      icon.classList.toggle('open');
+    }
+  </script>
+  <script src="bot.js"></script>
+</body>
+
+</html>

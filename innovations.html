@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Innovations - Generative AI Club</title>
+  <!-- Font Awesome CDN -->
+  <script src="https://kit.fontawesome.com/c5b2d19410.js" crossorigin="anonymous"></script>
+  <style>
+    /*-----------------------------------------
+      CSS Variables & Global Styles
+    ------------------------------------------*/
+    :root {
+      /* Color Palette */
+      --primary-bg: #0a192f;
+      --secondary-bg: #020c1b;
+      --accent: #64ffda;
+      --text: #ffffff;
+      /* Radial Gradient Colors */
+      --gradient-center: rgba(100, 255, 218, 0.8);
+      --gradient-alt: rgba(25, 231, 183, 0.3);
+      --gradient-edge: rgba(100, 255, 218, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--primary-bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      /* Ensure the body takes up the full viewport height */
+    }
+
+    /* Main Content */
+    .content {
+      flex: 1;
+      /* Allow the main content to grow and push the footer down */
+    }
+
+    /*-----------------------------------------
+      Navbar Styles
+    ------------------------------------------*/
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--secondary-bg);
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--accent);
+    }
+
+    .navbar .menu-icon {
+      display: none;
+      /* Hidden by default */
+      flex-direction: column;
+      gap: 4px;
+      cursor: pointer;
+      width: 30px;
+      height: 20px;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .navbar .menu-icon div {
+      width: 100%;
+      height: 3px;
+      background-color: var(--accent);
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    }
+
+    .navbar .menu-icon.open div:nth-child(1) {
+      transform: rotate(45deg) translateY(8px);
+    }
+
+    .navbar .menu-icon.open div:nth-child(2) {
+      opacity: 0;
+    }
+
+    .navbar .menu-icon.open div:nth-child(3) {
+      transform: rotate(-45deg) translateY(-8px);
+    }
+
+    .navbar ul {
+      list-style: none;
+      display: flex;
+    }
+
+    .navbar ul li {
+      position: relative;
+      margin-left: 2rem;
+    }
+
+    .navbar ul li a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 1rem;
+      padding: 0.5rem 0;
+      position: relative;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .navbar ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background-color: var(--accent);
+      transition: width 0.3s ease-in-out;
+    }
+
+    .navbar ul li a:hover {
+      color: var(--accent);
+    }
+
+    .navbar ul li a:hover::after {
+      width: 100%;
+    }
+
+    /*-----------------------------------------
+      Innovations Section Styles
+    ------------------------------------------*/
+    .innovations-section {
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+
+    .innovations-section h2 {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .innovation-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      justify-items: center;
+    }
+
+    .innovation-card {
+      background-color: var(--secondary-bg);
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: left;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    .innovation-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px var(--accent);
+    }
+
+    .innovation-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+
+    .innovation-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .innovation-card p {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .innovation-card a {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 1rem;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .innovation-card a:hover {
+      transform: scale(1.1);
+    }
+
+    /* Max Width Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /*-----------------------------------------
+      Footer Styles
+    ------------------------------------------*/
+    footer {
+      background-color: var(--secondary-bg);
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: auto;
+      /* Push the footer to the bottom */
+    }
+
+    footer .social-links {
+      margin-bottom: 1rem;
+    }
+
+    footer .social-links a {
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      margin: 0 0.5rem;
+      border-radius: 10%;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    footer .social-links a:hover {
+      transform: scale(1.2) translateY(-5px);
+      box-shadow: 0 0 15px var(--accent);
+    }
+
+    /*-----------------------------------------
+      Responsive Navbar
+    ------------------------------------------*/
+    @media (max-width: 768px) {
+      .navbar ul {
+        display: none;
+        flex-direction: column;
+        background-color: var(--secondary-bg);
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        padding: 1rem 0;
+      }
+
+      .navbar ul.active {
+        display: flex;
+      }
+
+      .navbar ul li {
+        margin: 0.5rem 0;
+        text-align: center;
+      }
+
+      .navbar ul li a::after {
+        display: none;
+        /* Disable underline animation on small screens */
+      }
+
+      .navbar .menu-icon {
+        display: flex;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="logo">GenAI Club</div>
+    <div class="menu-icon" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <ul id="menu">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="innovations.html">Innovations</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="tools.html">Tools</a></li>
+    </ul>
+  </nav>
+
+  <div class="content">
+    <section class="innovations-section" id="innovations">
+      <div class="container">
+        <h2>Our Innovations</h2>
+        <p>Explore the groundbreaking projects and innovations created by our community.</p>
+
+        <br>
+
+        <!-- Innovation Grid -->
+        <div class="innovation-grid">
+          <!-- Innovation 1 -->
+          <div class="innovation-card">
+            <img src="https://via.placeholder.com/300x200" alt="Innovation Image" />
+            <h3>AI-Powered Art Generator</h3>
+            <p>
+              A generative AI tool that creates stunning artwork from textual descriptions.
+            </p>
+            <a href="#" target="_blank">Learn More</a>
+          </div>
+
+          <!-- Innovation 2 -->
+          <div class="innovation-card">
+            <img src="https://via.placeholder.com/300x200" alt="Innovation Image" />
+            <h3>Smart Healthcare Assistant</h3>
+            <p>
+              An AI-powered assistant designed to improve patient care and streamline medical workflows.
+            </p>
+            <a href="#" target="_blank">Learn More</a>
+          </div>
+
+          <!-- Innovation 3 -->
+          <div class="innovation-card">
+            <img src="https://via.placeholder.com/300x200" alt="Innovation Image" />
+            <h3>Autonomous Drone System</h3>
+            <p>
+              A drone system powered by AI for efficient delivery and surveillance operations.
+            </p>
+            <a href="#" target="_blank">Learn More</a>
+          </div>
+
+          <!-- Innovation 4 -->
+          <div class="innovation-card">
+            <img src="https://via.placeholder.com/300x200" alt="Innovation Image" />
+            <h3>Natural Language Chatbot</h3>
+            <p>
+              A conversational AI chatbot capable of understanding and responding in multiple languages.
+            </p>
+            <a href="#" target="_blank">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="social-links">
+      <a href="#" target="_blank"><i class="fab fa-x-twitter"></i></a> <!-- Twitter -->
+      <a href="#" target="_blank"><i class="fab fa-instagram"></i></a> <!-- Instagram -->
+      <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a> <!-- LinkedIn -->
+    </div>
+    <p>&copy; 2025 Generative AI Club. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById('menu');
+      const icon = document.querySelector('.menu-icon');
+      menu.classList.toggle('active');
+      icon.classList.toggle('open');
+    }
+  </script>
+  <script src="bot.js"></script>
+</body>
+
+</html>
